@@ -75,11 +75,7 @@ button:hover{background:#00ff75;color:black}
  <div class="info">
   <div class="small">RANDOM DEMO RESULT</div>
   <div class="result" id="result">---</div>
-  <button onclick="newResult()">GENERATE DEMO</button>
- </div>
- <p class="small">Random demo only. Not a prediction.</p>
- <button onclick="logout()">LOGOUT</button>
-</div>
+  
 
 <script>
 // Matrix animation
@@ -148,13 +144,21 @@ function updateTimer(){
 setInterval(updateTimer,1000);
 updateTimer();
 
-// Random demo result
-function newResult(){
- const words=["BIG","SMALL"];
- document.getElementById("result").textContent=
- words[Math.floor(Math.random()*2)];
+// Automatic random result every minute
+let lastMinute = -1;
+
+function updateRandomResult(){
+ const now = new Date();
+ const currentMinute = now.getMinutes();
+
+ if(currentMinute !== lastMinute){
+  lastMinute = currentMinute;
+  const words = ["BIG", "SMALL"];
+  const random = Math.floor(Math.random() * 2);
+  document.getElementById("result").textContent = words[random];
+ }
 }
-</script>
-</body>
-</html>
+
+setInterval(updateRandomResult, 1000);
+updateRandomResult();
   
