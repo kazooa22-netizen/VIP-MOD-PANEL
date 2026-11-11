@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALEX VIP PANEL</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#020605;color:#00ff75;
+ font-family:Orbitron,sans-serif;min-height:100vh;
+ display:flex;align-items:center;justify-content:center;
+ overflow:hidden;
+}
+canvas{position:fixed;inset:0;z-index:-1}
+.panel{
+ width:90%;max-width:390px;padding:28px 20px;
+ background:rgba(0,10,5,.94);
+ border:1px solid #00ff75;border-radius:18px;
+ box-shadow:0 0 25px #00ff7555;text-align:center;
+}
+h1{font-size:27px;text-shadow:0 0 12px #00ff75}
+h2{font-size:19px}
+input{
+ width:100%;padding:14px;background:#07120c;
+ border:1px solid #00ff75;border-radius:8px;
+ color:#00ff75;text-align:center;font-size:16px;
+ margin:15px 0;font-family:inherit;
+}
+button{
+ width:100%;padding:13px;margin-top:12px;
+ background:transparent;border:1px solid #00ff75;
+ color:#00ff75;border-radius:8px;font-family:inherit;
+ font-weight:bold;cursor:pointer;
+}
+button:hover{background:#00ff75;color:black}
+.hidden{display:none}
+.info{
+ margin:18px 0;padding:15px;
+ border:1px solid #00ff7555;border-radius:10px;
+ overflow-wrap:anywhere;
+}
+.value{font-size:25px;margin:12px;color:white}
+.result{font-size:30px;color:#ffdf00;margin:15px}
+.small{font-size:11px;color:#9bffbf}
+.error{color:#ff5555;font-size:12px}
+</style>
+</head>
+<body>
+<canvas id="matrix"></canvas>
+
+<div class="panel" id="login">
+ <h1>ALEX VIP</h1>
+ <p>SECURE ACCESS PORTAL</p>
+ <input id="key" type="password" placeholder="ENTER ACCESS KEY">
+ <button onclick="loginUser()">LOGIN</button>
+ <p id="error" class="error"></p>
+ <button onclick="buyKey()">BUY KEY</button>
+ <p class="small">VIP ACCESS SYSTEM</p>
+</div>
+
+<div class="panel hidden" id="dashboard">
+ <h1>SERVER RUNNING</h1>
+ <h2>WELCOME TO VIP PANEL</h2>
+ <div class="info">
+  <div class="small">CURRENT PERIOD</div>
+  <div class="value" id="period">Loading...</div>
+ </div>
+ <div class="info">
+  <div class="small">NEXT UPDATE IN</div>
+  <div class="value" id="timer">00:00</div>
+ </div>
+ <div class="info">
+  <div class="small">RANDOM DEMO RESULT</div>
+  <div class="result" id="result">---</div>
+  <button onclick="newResult()">GENERATE DEMO</button>
+ </div>
+ <p class="small">Random demo only. Not a prediction.</p>
+ <button onclick="logout()">LOGOUT</button>
+</div>
+
+<script>
+// Matrix animation
+const canvas=document.getElementById("matrix");
+const ctx=canvas.getContext("2d");
+let drops=[];
+function resize(){
+ canvas.width=innerWidth;
+ canvas.height=innerHeight;
+ drops=Array(Math.floor(canvas.width/14)).fill(1);
+}
+resize();
+window.addEventListener("resize",resize);
+function draw(){
+ ctx.fillStyle="rgba(0,0,0,0.08)";
+ ctx.fillRect(0,0,canvas.width,canvas.height);
+ ctx.fillStyle="#00ff75";
+ ctx.font="14px monospace";
+ drops.forEach((y,i)=>{
+  ctx.fillText("01HACKVIP"[Math.floor(Math.random()*9)],i*14,y*14);
+  if(y*14>canvas.height&&Math.random()>.97)drops[i]=0;
+  drops[i]++;
+ });
+}
+setInterval(draw,40);
+
+// Demo access key
+const ACCESS_KEY="ALEX001";
+function loginUser(){
+ const value=document.getElementById("key").value;
+ if(value===ACCESS_KEY){
+  document.getElementById("login").classList.add("hidden");
+  document.getElementById("dashboard").classList.remove("hidden");
+  document.getElementById("error").textContent="";
+ }else{
+  document.getElementById("error").textContent="INVALID ACCESS KEY";
+ }
+}
+function logout(){
+ document.getElementById("dashboard").classList.add("hidden");
+ document.getElementById("login").classList.remove("hidden");
+ document.getElementById("key").value="";
+}
+
+// Telegram buy key
+function buyKey(){
+ window.open("https://t.me/+xVHt9WSvAsw4YzY1","_blank");
+}
+
+// Timer and period
+function updateTimer(){
+ const now=new Date();
+ const seconds=now.getSeconds();
+ const remaining=60-seconds;
+ document.getElementById("timer").textContent=
+ "00:"+String(remaining).padStart(2,"0");
+
+ const date=now.getFullYear()+
+ String(now.getMonth()+1).padStart(2,"0")+
+ String(now.getDate()).padStart(2,"0");
+
+ const total=now.getHours()*60+now.getMinutes();
+ document.getElementById("period").textContent=
+ date+"1000"+String(10001+total);
+}
+setInterval(updateTimer,1000);
+updateTimer();
+
+// Random demo result
+function newResult(){
+ const words=["BIG","SMALL"];
+ document.getElementById("result").textContent=
+ words[Math.floor(Math.random()*2)];
+}
+</script>
+</body>
+</html>
+  
